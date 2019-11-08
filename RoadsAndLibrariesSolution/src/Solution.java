@@ -5,17 +5,20 @@ public class Solution {
         Graph graph = new Graph(cities, n);
         int lib = graph.count_trees() * c_lib;
         int roads = graph.min_amount_of_nodes_to_connect() * c_road;
-        return lib + roads;
+        return Integer.min(lib + roads, (c_lib * n));
     }
 
     public static void main(String[] args) {
-        int[][] matrix = new int[3][3];
+        int[][] matrix = new int[6][6];
         int c_lib = 2;
-        int c_road = 1;
+        int c_road = 5;
+        matrix[0][2] = 1;
+        matrix[2][3] = 1;
+        matrix[1][3] = 1;
         matrix[0][1] = 1;
-        matrix[2][0] = 1;
         matrix[1][2] = 1;
-        System.out.println(roadsAndLibraries(3, c_lib, c_road, matrix));
+        matrix[4][5] = 1;
+        System.out.println(roadsAndLibraries(6, c_lib, c_road, matrix));
     }
 
     //given a possible forest -- two none combined trees
