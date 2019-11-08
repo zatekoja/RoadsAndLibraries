@@ -5,20 +5,21 @@ public class Solution {
         Graph graph = new Graph(cities, n);
         int lib = graph.count_trees() * c_lib;
         int roads = graph.min_amount_of_nodes_to_connect() * c_road;
-        return Integer.min(lib + roads, (c_lib * n));
+        //return the minimum between making a library in every city or making in one city and joining roads
+        return Long.min(lib + roads, (c_lib * n));
     }
 
     public static void main(String[] args) {
-        int[][] matrix = new int[6][6];
-        int c_lib = 2;
-        int c_road = 5;
-        matrix[0][2] = 1;
-        matrix[2][3] = 1;
-        matrix[1][3] = 1;
+        int[][] matrix = new int[5][5];
+        int c_lib = 6;
+        int c_road = 1;
         matrix[0][1] = 1;
-        matrix[1][2] = 1;
-        matrix[4][5] = 1;
-        System.out.println(roadsAndLibraries(6, c_lib, c_road, matrix));
+        matrix[1][0] = 1;
+        matrix[2][0] = 1;
+        matrix[0][2] = 1;
+        matrix[3][0] = 1;
+        matrix[0][3] = 1;
+        System.out.println(roadsAndLibraries(5, c_lib, c_road, matrix));
     }
 
     //given a possible forest -- two none combined trees
@@ -54,9 +55,9 @@ public class Solution {
                 stack.pop();
                 for (int i = 0; i < adjMatrix[start].length; i++) {
                     if (adjMatrix[start][i] == 1 && !visited[i]) {
-                        start = i;
-                        stack.push(adjMatrix[start][i]);
+                        stack.push(adjMatrix[i][start]);
                         visited[i] = true;
+                        i = 0;
                     }
                 }
             }
