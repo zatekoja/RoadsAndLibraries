@@ -55,10 +55,11 @@ public class Solution {
         //dfs non recur
         void DFS_util(boolean[] visited, int start) {
             Stack<Integer> stack = new Stack<>();
+            int k;
             //push the first element of the adj matrix into stack
             stack.push(start);
             while (!stack.isEmpty()) {
-                int k = stack.pop();
+                k = stack.pop();
                 for (int i = 0; i < adjMatrix[k].length; i++) {
                     if (adjMatrix[k][i] == 1 && !visited[i]) {
                         stack.push(i);
