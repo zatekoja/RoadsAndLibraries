@@ -3,23 +3,23 @@ import java.util.Stack;
 public class Solution {
     static long roadsAndLibraries(int n, int c_lib, int c_road, int[][] cities) {
         Graph graph = new Graph(cities, n);
-        int lib = graph.count_trees() * c_lib;
-        int roads = graph.min_amount_of_nodes_to_connect() * c_road;
+        long lib = graph.count_trees() * c_lib;
+        long roads = graph.min_amount_of_nodes_to_connect() * c_road;
         //return the minimum between making a library in every city or making in one city and joining roads
         return Long.min(lib + roads, (c_lib * n));
     }
 
     public static void main(String[] args) {
-        int[][] matrix = new int[5][5];
-        int c_lib = 6;
+        int[][] matrix = new int[3][3];
+        int c_lib = 2;
         int c_road = 1;
         matrix[0][1] = 1;
         matrix[1][0] = 1;
         matrix[2][0] = 1;
         matrix[0][2] = 1;
-        matrix[3][0] = 1;
-        matrix[0][3] = 1;
-        System.out.println(roadsAndLibraries(5, c_lib, c_road, matrix));
+        matrix[1][2] = 1;
+        matrix[2][1] = 1;
+        System.out.println(roadsAndLibraries(3, c_lib, c_road, matrix));
     }
 
     //given a possible forest -- two none combined trees
@@ -36,38 +36,43 @@ public class Solution {
         int[] arr;
         //constructor
         Graph(int[][] matrix, int vertex) {
-            this.adjMatrix = matrix;
             this.V = vertex;
+            this.adjMatrix = new int[V][V];
             this.is_Parent = new boolean[V];
             this.arr = new int[V];
             for (int i = 0; i < V; i++) {
                 arr[i] = -1;
+            }
+            //   add_edge(matrix); use this to answer HackerRank question
+        }
+
+        void add_edge(int[][] edge_list) {
+            for (int[] x : edge_list) {
+                adjMatrix[x[0] - 1][x[1] - 1] = 1;
+                adjMatrix[x[1] - 1][x[0] - 1] = 1;
             }
         }
         //dfs non recur
         void DFS_util(boolean[] visited, int start) {
             Stack<Integer> stack = new Stack<>();
             //push the first element of the adj matrix into stack
-            stack.push(adjMatrix[start][0]);
-            //set its visited to true
-            visited[start] = true;
+            stack.push(start);
             while (!stack.isEmpty()) {
-                stack.pop();
-                for (int i = 0; i < adjMatrix[start].length; i++) {
-                    if (adjMatrix[start][i] == 1 && !visited[i]) {
-                        stack.push(adjMatrix[i][start]);
-                        visited[i] = true;
-                        i = 0;
+                int k = stack.pop();
+                for (int i = 0; i < adjMatrix[k].length; i++) {
+                    if (adjMatrix[k][i] == 1 && !visited[i]) {
+                        stack.push(i);
                     }
                 }
+                //set its visited to true
+                visited[k] = true;
             }
         }
-
         //check : https://www.geeksforgeeks.org/count-number-trees-forest/ for more info.
-        int count_trees() {
+        long count_trees() {
             //create array of visited
             boolean[] visited = new boolean[V];
-            int result = 0;
+            long result = 0;
             //For each vertex(goes from 1 till V) run dfs on it
             //dfs will visit every node connected to the starting point and mark its visited to true
             //if a node is not visited after the dfs has been run, then its in another tree in the forest
@@ -81,8 +86,8 @@ public class Solution {
             return result;
         }
 
-        int min_amount_of_nodes_to_connect() {
-            int count = 0;
+        long min_amount_of_nodes_to_connect() {
+            long count = 0;
             for (int i = 0; i < adjMatrix.length; i++) {
                 for (int j = 0; j < adjMatrix[i].length; j++) {
                     if (arr[j] == -1 && !is_Parent[j]) {
